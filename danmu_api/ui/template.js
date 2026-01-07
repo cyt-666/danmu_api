@@ -19,6 +19,7 @@ export const HTML_TEMPLATE = /* html */ `
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LogVar弹幕API</title>
     <link rel="icon" type="image/jpg" href="https://i.mji.rip/2025/09/27/eedc7b701c0fa5c1f7c175b22f441ad9.jpeg">
+    <link rel="apple-touch-icon" href="https://i.mji.rip/2025/09/27/eedc7b701c0fa5c1f7c175b22f441ad9.jpeg">
     <style>${baseCssContent}</style>
     <style>${componentsCssContent}</style>
     <style>${formsCssContent}</style>
@@ -266,6 +267,7 @@ export const HTML_TEMPLATE = /* html */ `
                         <option value="number">数字 (1-100)</option>
                         <option value="select">单选</option>
                         <option value="multi-select">多选 (可排序)</option>
+                        <option value="map">映射</option>
                     </select>
                 </div>
                 <div class="form-group" id="value-input-container">
