@@ -1,44 +1,41 @@
-name: Fork Sync
+name: Upstream Sync
 
 permissions:
-    contents: write
+  contents: write
 
 on:
-    schedule:
-        - cron: "0 0 * * *"  # 每天午夜执行
-    workflow_dispatch:  # 允许手动触发
+  schedule:
+    - cron: "0 0 1 * *"  # 修改为每月 1 号执行
+  workflow_dispatch:      # 允许手动触发
 
 jobs:
-    sync_with_upstream:
-        name: Sync with Upstream
-        runs-on: ubuntu-latest
-        if: ${{ github.event.repository.fork }}
+  sync_with_upstream:
+    name: Sync with Upstream
+    runs-on: ubuntu-latest
+    # 【重要修改】删除了 if: ${{ github.event.repository.fork }}
+    # 这样即使你的仓库不是官方 Fork 也能运行
 
-        steps:
-            - name: Checkout target repo
-              uses: actions/checkout@v4
-              with:
-                token: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: Checkout target repo
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
 
-            - name: Sync Upstream
-              uses: aormsby/Fork-Sync-With-Upstream-action@v3.4
-              with:
-                  target_repo_token: ${{ secrets.GITHUB_TOKEN }}
-                  upstream_sync_repo: huangxd-/danmu_api
-                  upstream_sync_branch: main
-                  target_sync_branch: main
-                  test_mode: false
+      - name: Sync Upstream
+        uses: aormsby/Fork-Sync-With-Upstream-action@v3.4
+        with:
+          target_repo_token: ${{ secrets.GITHUB_TOKEN }}
+          upstream_sync_repo: huangxd-/danmu_api
+          upstream_sync_branch: main
+          target_sync_branch: main
+          test_mode: false
 
-            - name: Check for new commits
-              if: success()
-              run: echo "Sync completed successfully"
+      - name: Check for Success
+        if: success()
+        run: echo "Sync completed successfully"
 
-            - name: Check for Failure
-              if: failure()
-              run: |
-                  echo "[Error] Sync failed. This might be due to:"
-                  echo "1. Changes in the upstream workflow file"
-                  echo "2. Merge conflicts that need manual resolution"
-                  echo "3. Network issues"
-                  echo "Please check the logs and consider manual sync if needed."
-                  exit 1
+      - name: Check for Failure
+        if: failure()
+        run: |
+          echo "[Error] Sync failed. Possible reasons: conflicts or upstream changes."
+          exit 1
